@@ -4,7 +4,7 @@
 'use strict';
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
-var Tag = require('./adtranTagModel');
+var Tag = require('./adtrantagmodel');
 
 var ContainerSchema = new Schema({
 	containerId:{

@@ -4,8 +4,8 @@
 'use strict';
 
 var mongoose = require('mongoose'),
-    Container = require('../models/adtranContainerModel'),
-    Tag = require('../models/adtranTagModel');
+    Container = require('../models/adtrancontainermodel'),
+    Tag = require('../models/adtrantagmodel');
 
 exports.getTagListByContainerId = function(req, res){
     console.log("In controller, get container with req " + req.params.containerId);

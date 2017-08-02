@@ -5,7 +5,7 @@
 'use strict';
 
 module.exports = function(app){
-    var adtranTagController = require('../controllers/adtranTagController');
+    var adtranTagController = require('../controllers/adtrantagcontroller');
 
     //Get tag by containerID /containers/:containerId
     console.log("Routing to get Container");
