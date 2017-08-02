@@ -18,7 +18,7 @@ db = mongoose.connect('mongodb://127.0.0.1:27017/adtranonetag', {useMongoClient:
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
 
-var routes = require(__dirname + '/api/routes/adTranTagRoutes');
+var routes = require('./api/routes/adTranTagRoutes');
 routes(app);
 
 app.listen(port);
