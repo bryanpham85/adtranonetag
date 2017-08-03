@@ -18,6 +18,7 @@ exports.getTagListByContainerId = function(req, res){
         if(container == null){
             console.log("Cannot find any container");
             res.send("No Container Found");
+            return;
         }
         console.log("This is what we get from Mongo " + container);
         //Get Tag list from Container and build json objects to return
