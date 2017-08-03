@@ -10,7 +10,7 @@ var mongoose = require('mongoose'),
 exports.getTagListByContainerId = function(req, res){
     console.log("In controller, get container with req " + req.query.id);
     //update from /containerId to ?id= URL pattern
-    if(typeof(req.query.id) != 'number'){
+    if(isNaN(req.query.id)){
         res.send("ContainerID should be a number");
         return;
     }
