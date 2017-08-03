@@ -12,6 +12,8 @@ mongoose.Promise = global.Promise;
 db = mongoose.connect('mongodb://127.0.0.1:27017/adtranonetag', {useMongoClient: true}, function(error){
 	if(error)
 		console.log(error);
+	else
+		"Connected to mongo adtranonetag";
 });
 //console.log(db);
 
