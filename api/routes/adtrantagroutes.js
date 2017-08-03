@@ -10,7 +10,8 @@ module.exports = function(app){
     //Get tag by containerID /containers/:containerId
     console.log("Routing to get Container");
 
-    app.route('/container/:containerId')
+    //app.route('/container.js/:containerId')
+    app.route('/container.js')
         .get(adtranTagController.getTagListByContainerId);
 
     app.route('/containers')

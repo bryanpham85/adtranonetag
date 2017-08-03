@@ -8,8 +8,9 @@ var mongoose = require('mongoose'),
     Tag = require('../models/adtrantagmodel');
 
 exports.getTagListByContainerId = function(req, res){
-    console.log("In controller, get container with req " + req.params.containerId);
-    Container.findOne({containerId:req.params.containerId}, function(err, container){
+    console.log("In controller, get container with req " + req.query.id);
+    //update from /containerId to ?id= URL pattern
+    Container.findOne({containerId:req.query.id}, function(err, container){
         if(err) {
             console.log(err);
             res.send(err);
@@ -37,7 +38,13 @@ exports.getTagListByContainerId = function(req, res){
         var respond = function(tags, res)
         {
             console.log(tags);
-            res.json(tags);
+            var tagjs = "<!-------ADTRAN ONE TAG ---------->\n";
+            for(var i=0; i<tags.length;i++){
+                tagjs += tags[i].script +"\n";
+            }
+            res.setHeader("content-type", "text/javascript");
+            res.end(tagjs);
+            //res.json(tags);
         }
     });
 };
