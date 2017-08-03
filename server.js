@@ -13,7 +13,7 @@ db = mongoose.connect('mongodb://127.0.0.1:27017/adtranonetag', {useMongoClient:
 	if(error)
 		console.log(error);
 	else
-		"Connected to mongo adtranonetag";
+		console.log("Connected to mongo adtranonetag");
 });
 //console.log(db);
 
