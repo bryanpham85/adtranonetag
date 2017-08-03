@@ -44,7 +44,7 @@ exports.getTagListByContainerId = function(req, res){
             //This function is called back when the loop finished
             var respond = function (tags, res) {
                 console.log(tags);
-                var tagjs = "<!-------ADTRAN ONE TAG ---------->\n";
+                var tagjs = "//-------ADTRAN ONE TAG ----------\n";
                 for (var i = 0; i < tags.length; i++) {
                     tagjs += tags[i].script + "\n";
                 }
