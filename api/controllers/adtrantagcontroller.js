@@ -29,18 +29,19 @@ exports.getTagListByContainerId = function(req, res){
             console.log("This is what we get from Mongo " + container);
             //Get Tag list from Container and build json objects to return
             var tagIdList = container.tags;
-            var tags = [];
-            var sentinel = 0;// To control the call back to function response when the loop finished
-            for (var i = 0; i < tagIdList.length; i++) {
-                Tag.findOne({tagId: tagIdList[i]}, function (err, tag) {
-                    if (err)
-                        console.log(err);
-                    else if (tag !== null)
-                        tags.push(tag);
-                    if (++sentinel == tagIdList.length)
-                        respond(tags, res);
-                });
-            }
+            //var tags = [];
+
+            console.log("Here is the tag ID list " + tagIdList);
+            Tag.find({tagId:{$in: tagIdList}}, function(err, tags){
+               if(err){
+                   console.log(err);
+               }
+               else{
+                   console.log(tags);
+                   respond(tags, res);
+               }
+
+            });
             //This function is called back when the loop finished
             var respond = function (tags, res) {
                 console.log(tags);

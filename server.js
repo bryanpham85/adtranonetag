@@ -9,9 +9,11 @@ var express = require('express'),
 	bodyParser = require('body-parser');
 
 mongoose.Promise = global.Promise;
-db = mongoose.connect('mongodb://127.0.0.1:27017/adtranonetag', {useMongoClient: true}, function(error){
-	if(error)
-		console.log(error);
+db = mongoose.connect('mongodb://adtranonetag:123456@127.0.0.1:27017/adtranonetag', {useMongoClient: true}, function(error){
+	if(error) {
+        console.log(error);
+        process.exit(1);
+    }
 	else
 		console.log("Connected to mongo adtranonetag");
 });
