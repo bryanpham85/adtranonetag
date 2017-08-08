@@ -26,10 +26,8 @@ exports.getTagListByContainerId = function(req, res){
                 res.send("No Container Found");
                 return;
             }
-            console.log("This is what we get from Mongo " + container);
             //Get Tag list from Container and build json objects to return
             var tagIdList = container.tags;
-            //var tags = [];
 
             console.log("Here is the tag ID list " + tagIdList);
             Tag.find({tagId:{$in: tagIdList}}, function(err, tags){
@@ -57,7 +55,8 @@ exports.getTagListByContainerId = function(req, res){
     }
     catch(exception)
     {
-        res.send(exception);
+        console.log(exception);
+        res.send("Sorry! Unexpected error happen.");
     }
 };
 

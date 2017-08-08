@@ -5,11 +5,12 @@ var express = require('express'),
 	app = express(),
 	port = process.env.PORT || 3000,
 	mongoose = require('mongoose'),
-	//Container = require('./api/models/adtranContainerModel'),
-	bodyParser = require('body-parser');
+	bodyParser = require('body-parser'),
+	config = require('./config').get(process.env.NODE_ENV);
 
 mongoose.Promise = global.Promise;
-db = mongoose.connect('mongodb://adtranonetag:123456@127.0.0.1:27017/adtranonetag', {useMongoClient: true}, function(error){
+//'mongodb://adtranonetag:123456@127.0.0.1:27017/adtranonetag'
+db = mongoose.connect(config.database, {useMongoClient: true}, function(error){
 	if(error) {
         console.log(error);
         process.exit(1);
