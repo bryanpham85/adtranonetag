@@ -5,7 +5,8 @@
 
 var mongoose = require('mongoose'),
     Container = require('../models/adtrancontainermodel'),
-    Tag = require('../models/adtrantagmodel');
+    Tag = require('../models/adtrantagmodel'),
+    config = require('../../config').get(process.env.NODE_ENV);
 
 exports.getTagListByContainerId = function(req, res){
     console.log("In controller, get container with req " + req.query.id);
@@ -49,7 +50,6 @@ exports.getTagListByContainerId = function(req, res){
                 }
                 res.setHeader("content-type", "text/javascript");
                 res.end(tagjs);
-                //res.json(tags);
             }
         });
     }
@@ -87,4 +87,92 @@ exports.createTag = function(req, res){
             res.send(err);
         res.json(tag);
     })
+};
+
+exports.initData = function(req, res){
+    //Check secret key to init
+    if(req.query.initkey != config.initkey){
+        console.log("Invalid Init request with wrong secretkey")
+        res.send("You cannot take that action");
+        return;
+    }
+    var noOfContainer = req.query.containerno;
+    if(isNaN(noOfContainer)){
+        console.log("Number of Init container is not a number");
+        res.send("Invalid parameter");
+        return;
+    }
+
+    var finishedTagCreation = false;
+    var finishedContainerCreation = false;
+
+    console.log("Initializing data for container and tag");
+    /*=======Init 100 Tag==========*/
+    var tagScript = "(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;"+
+        "i[r]=i[r]||function(){(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();"+
+        "a=s.createElement(o),m=s.getElementsByTagName(o)[0];"+
+        "a.async=1;a.src=g;m.parentNode.insertBefore(a,m)})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');"+
+        "ga('create', 'UA-86280021-2', 'auto');ga('send', 'pageview');";
+
+
+
+    for (var i=0; i<100; i++){
+        var tag = new Tag();
+        tag.tagId = i;
+        tag.script = tagScript + "\n//TagId = " + i;
+        tag.save(function(err, tag){
+           if(err)
+               console.log(err);
+           else
+               console.log("Tag Created " + tag);
+        });
+        if((i+1)==100)
+            finishedTagCreation = true;
+    }
+
+    /*=======Init as the requested number of container=====*/
+    var sentinel = 0; //use to control the loop while inserting container
+    /*{
+        containerId:'',
+        name: '',
+        siteId: '1234',
+        script:'',
+        tags: []
+    }*/
+    var respond = function(res, noOfContainer){
+        console.log("Created successfully + " + noOfContainer + " Containers");
+        res.send("Init data sucess created + " + noOfContainer + " Containers");
+    }
+    for(var i=0; i<=noOfContainer; i++) {
+        var container =  new Container();
+        container.containerId = Math.floor(Math.random() * 1000000);
+        container.name = "TagName_" + container.containerId;
+        container.script = "Script of " + container.containerId;
+        var noOfTag = Math.floor(Math.random() * 20);
+        for (var j = 0; j < noOfTag; j++) {
+            var tagId = Math.floor(Math.random() * noOfTag);
+            if (!(container.tags.indexOf(tagId) >= 0))
+                container.tags.push(tagId);
+        }
+        try {
+            container.save(function (err, container) {
+                if (err)
+                    console.log(err);
+            });
+        }
+
+        catch (exception) {
+            console.log(exception);
+        }
+
+        if (++sentinel == noOfContainer)
+            finishedContainerCreation = true;
+
+    }
+    while (!(finishedTagCreation && finishedContainerCreation))
+        continue;
+    if (finishedTagCreation && finishedContainerCreation) {
+        console.log("Respond call at " + sentinel);
+        respond(res, noOfContainer);
+    }
 };

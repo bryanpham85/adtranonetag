@@ -20,4 +20,7 @@ module.exports = function(app){
 
     app.route('/tags')
         .post(adtranTagController.createTag);
+
+    app.route('/initdata')
+        .post(adtranTagController.initData);
 };
