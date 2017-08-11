@@ -6,6 +6,7 @@
 var mongoose = require('mongoose'),
     Container = require('../models/adtrancontainermodel'),
     Tag = require('../models/adtrantagmodel'),
+    cache = require('memory-cache'),
     config = require('../../config').get(process.env.NODE_ENV);
 
 exports.getTagListByContainerId = function(req, res){
@@ -37,19 +38,22 @@ exports.getTagListByContainerId = function(req, res){
                }
                else{
                    console.log(tags);
-                   respond(tags, res);
+                   respond(tags, req, res);
                }
 
             });
             //This function is called back when the loop finished
-            var respond = function (tags, res) {
+            var respond = function (tags, req, res) {
                 console.log(tags);
                 var tagjs = "//-------ADTRAN ONE TAG ----------\n";
                 for (var i = 0; i < tags.length; i++) {
                     tagjs += tags[i].script + "\n";
                 }
+                //push to cache before response
+                let key = "__adtranonetag__" + req.originalUrl || req.url;
+                cache.put(key, tagjs);
                 res.setHeader("content-type", "text/javascript");
-                res.end(tagjs);
+                res.send(tagjs);
             }
         });
     }
