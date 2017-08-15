@@ -15,6 +15,7 @@ var cache = (duration) =>{
         let key = '__adtranonetag__' + req.originalUrl || req.url
         let cachedBody = mcache.get(key)
         if (cachedBody) {
+            res.setHeader("content-type", "text/javascript");
             res.send(cachedBody);
             console.log("get from Cache");
             return;
