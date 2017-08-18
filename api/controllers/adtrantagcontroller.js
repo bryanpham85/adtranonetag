@@ -9,6 +9,7 @@ var mongoose = require('mongoose'),
     cache = require('memory-cache'),
     config = require('../../config').get(process.env.NODE_ENV);
 
+/*Get JS Script Tag of a container*/
 exports.getTagListByContainerId = function(req, res){
     console.log("In controller, get container with req " + req.query.id);
     //update from /containerId to ?id= URL pattern
@@ -32,7 +33,7 @@ exports.getTagListByContainerId = function(req, res){
             var tagIdList = container.tags;
 
             console.log("Here is the tag ID list " + tagIdList);
-            Tag.find({tagId:{$in: tagIdList}}, function(err, tags){
+            Tag.find({tagId:{$in: tagIdList}, content_type:'application/javascript'}, function(err, tags){
                if(err){
                    console.log(err);
                }
@@ -53,6 +54,62 @@ exports.getTagListByContainerId = function(req, res){
                 let key = "__adtranonetag__" + req.originalUrl || req.url;
                 cache.put(key, tagjs);
                 res.setHeader("content-type", "text/javascript");
+                res.send(tagjs);
+            }
+        });
+    }
+    catch(exception)
+    {
+        console.log(exception);
+        res.send("Sorry! Unexpected error happen.");
+    }
+};
+
+/*Get Non Script tag of a container*/
+exports.getNSTagListByContainerId = function(req, res){
+    console.log("In controller, get container with req " + req.query.id);
+    //update from /containerId to ?id= URL pattern
+    if(isNaN(req.query.id)){
+        res.send("ContainerID should be a number");
+        return;
+    }
+    try {
+        Container.findOne({containerId: req.query.id}, function (err, container) {
+            if (err) {
+                console.log(err);
+                res.send(err);
+                return;
+            }
+            if (container == null) {
+                console.log("Cannot find any container");
+                res.send("No Container Found");
+                return;
+            }
+            //Get Tag list from Container and build json objects to return
+            var tagIdList = container.tags;
+
+            console.log("Here is the tag ID list " + tagIdList);
+            Tag.find({tagId:{$in: tagIdList}, content_type:'noscript'}, function(err, tags){
+                if(err){
+                    console.log(err);
+                }
+                else{
+                    console.log(tags);
+                    respond(tags, req, res);
+                }
+
+            });
+            //This function is called back when the loop finished
+            var respond = function (tags, req, res) {
+                console.log(tags);
+                var tagjs = "//-------ADTRAN ONE TAG ----------\n";
+                for (var i = 0; i < tags.length; i++) {
+                    tagjs += tags[i].script + "\n";
+                }
+                //push to cache before response
+                let key = "__adtranonetag__" + req.originalUrl || req.url;
+                cache.put(key, tagjs);
+                res.setHeader("content-type", "html/text");
                 res.send(tagjs);
             }
         });

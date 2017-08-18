@@ -6,7 +6,8 @@
 
 module.exports = function(app){
     var mcache = require('memory-cache'),
-    adtranTagController = require('../controllers/adtrantagcontroller');
+    adtranTagController = require('../controllers/adtrantagcontroller'),
+    config = require('../../config').get(process.env.NODE_ENV);
 
 //define configuration for caching
 
@@ -37,7 +38,10 @@ var cache = (duration) =>{
 
     //app.route('/container.js/:containerId')
     app.route('/container.js')
-        .get(cache(1000),adtranTagController.getTagListByContainerId);
+        .get(cache(config.cacheduration),adtranTagController.getTagListByContainerId);
+
+    app.route('/nscontainer.html')
+        .get(cache(config.cacheduration),adtranTagController.getNSTagListByContainerId);
 
     app.route('/containers')
         .get(adtranTagController.getContainerList)
