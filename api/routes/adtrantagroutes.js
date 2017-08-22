@@ -13,15 +13,17 @@ module.exports = function(app){
 
 var cache = (duration) =>{
     return (req, res, next) =>{
+        var date = new Date(Date.now()).toDateString();
+        var time = new Date(Date.now()).toTimeString();
         let key = '__adtranonetag__' + req.originalUrl || req.url
         let cachedBody = mcache.get(key)
         if (cachedBody) {
             res.setHeader("content-type", "text/javascript");
             res.send(cachedBody);
-            console.log("get from Cache");
+            console.log("get from Cache for " + key + " at " + date + " " + time);
             return;
         } else {
-            console.log("get from DB with key + " + key);
+            console.log("get from DB for key + " + key + " at " + date + " " + time);
             res.header("content-type", "text/javascript");
             res.sendResponse = res.send
             res.send = (body) => {
@@ -33,10 +35,6 @@ var cache = (duration) =>{
     }
 }
 
-    //Get tag by containerID /containers/:containerId
-    console.log("Routing to get Container");
-
-    //app.route('/container.js/:containerId')
     app.route('/container.js')
         .get(cache(config.cacheduration),adtranTagController.getTagListByContainerId);
 

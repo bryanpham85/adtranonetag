@@ -17,7 +17,6 @@ var scriptWrapperSecondHalf = ');';
 
 /*Get JS Script Tag of a container*/
 exports.getTagListByContainerId = function(req, res){
-    console.log("In controller, get container with req " + req.query.id);
     //update from /containerId to ?id= URL pattern
     if(isNaN(req.query.id)){
         res.send("ContainerID should be a number");
@@ -38,26 +37,24 @@ exports.getTagListByContainerId = function(req, res){
             //Get Tag list from Container and build json objects to return
             var tagIdList = container.tags;
 
-            console.log("Here is the tag ID list " + tagIdList);
             Tag.find({tagId:{$in: tagIdList}, content_type:'application/javascript'}, function(err, tags){
                if(err){
                    console.log(err);
                }
                else{
-                   console.log(tags);
                    respond(tags, req, res);
                }
 
             });
             //This function is called back when the loop finished
             var respond = function (tags, req, res) {
-                console.log(tags);
+                console.log("Number of tag found for " + req.query.id + " is " + tags.length);
                 var tagjs = "<!-------ADTRAN ONE TAG ---------->";
                 for (var i = 0; i < tags.length; i++) {
                     tagjs += tags[i].script;// + "\n";
                 }
                 //push to cache before response
-                //var returnTag = scriptWrapperFirstHalf + "\"" + htmlencode.htmlEncode(tagjs) + "\"" + scriptWrapperSecondHalf;
+
                 tagjs = tagjs.replace(/"/g, '\\"');
                 tagjs = tagjs.replace(/<script /g, '\\x3Cscript ');
                 tagjs = tagjs.replace(/<\/script>/g, '\\x3C/script>');
@@ -78,7 +75,6 @@ exports.getTagListByContainerId = function(req, res){
 
 /*Get Non Script tag of a container*/
 exports.getNSTagListByContainerId = function(req, res){
-    console.log("In controller, get container with req " + req.query.id);
     //update from /containerId to ?id= URL pattern
     if(isNaN(req.query.id)){
         res.send("ContainerID should be a number");
@@ -99,20 +95,19 @@ exports.getNSTagListByContainerId = function(req, res){
             //Get Tag list from Container and build json objects to return
             var tagIdList = container.tags;
 
-            console.log("Here is the tag ID list " + tagIdList);
+            //console.log("Here is the tag ID list " + tagIdList);
             Tag.find({tagId:{$in: tagIdList}, content_type:'noscript'}, function(err, tags){
                 if(err){
                     console.log(err);
                 }
                 else{
-                    console.log(tags);
                     respond(tags, req, res);
                 }
 
             });
             //This function is called back when the loop finished
             var respond = function (tags, req, res) {
-                console.log(tags);
+                console.log("Number of tag found for " + req.query.id + " is " + tags.length);
                 var tagNojs = "//-------ADTRAN ONE TAG ----------\n";
                 for (var i = 0; i < tags.length; i++) {
                     tagNojs += tags[i].script + "\n";
