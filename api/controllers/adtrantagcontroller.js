@@ -108,7 +108,7 @@ exports.getNSTagListByContainerId = function(req, res){
             //This function is called back when the loop finished
             var respond = function (tags, req, res) {
                 console.log("Number of tag found for " + req.query.id + " is " + tags.length);
-                var tagNojs = "//-------ADTRAN ONE TAG ----------\n";
+                var tagNojs = "<!-------ADTRAN ONE TAG ---------->";
                 for (var i = 0; i < tags.length; i++) {
                     tagNojs += tags[i].script + "\n";
                 }
