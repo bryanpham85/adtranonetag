@@ -36,7 +36,7 @@ var cache = (duration, contenttype) =>{
 }
 
     app.route('/container.js')
-        .get(cache(config.cacheduration, "text/javasript"),adtranTagController.getTagListByContainerId);
+        .get(cache(config.cacheduration, "text/javascript"),adtranTagController.getTagListByContainerId);
 
     app.route('/nscontainer.html')
         .get(cache(config.cacheduration, "text/html"),adtranTagController.getNSTagListByContainerId);
