@@ -9,8 +9,9 @@ var cache_duration = process.env.ONETAG_CACHE_DURATION;
 module.exports = function(app){
     var mcache = require('memory-cache'),
     adtranTagController = require('../controllers/adtrantagcontroller'),
-    config = require('../../config').get(process.env.NODE_ENV),
     log4js = require('log4js');
+//config = require('../../config').get(process.env.NODE_ENV),
+
 //configure log4js
 log4js.configure({
    appenders:{
