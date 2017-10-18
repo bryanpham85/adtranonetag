@@ -70,7 +70,4 @@ var cache = (duration, contenttype) =>{
 
     app.route('/tags')
         .post(adtranTagController.createTag);
-
-    app.route('/initdata')
-        .post(adtranTagController.initData);
 };
