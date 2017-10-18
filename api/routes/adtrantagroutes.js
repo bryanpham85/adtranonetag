@@ -4,6 +4,8 @@
 
 'use strict';
 
+var cache_duration = process.env.ONETAG_CACHE_DURATION;
+
 module.exports = function(app){
     var mcache = require('memory-cache'),
     adtranTagController = require('../controllers/adtrantagcontroller'),
@@ -57,10 +59,10 @@ var cache = (duration, contenttype) =>{
 }
 
     app.route('/container.js')
-        .get(cache(config.cacheduration, "text/javascript"),adtranTagController.getTagListByContainerId);
+        .get(cache(cache_duration, "text/javascript"),adtranTagController.getTagListByContainerId);
 
     app.route('/nscontainer.html')
-        .get(cache(config.cacheduration, "text/html"),adtranTagController.getNSTagListByContainerId);
+        .get(cache(cache_duration, "text/html"),adtranTagController.getNSTagListByContainerId);
 
     app.route('/containers')
         .get(adtranTagController.getContainerList)
